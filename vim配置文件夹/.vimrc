@@ -8,12 +8,18 @@
 "                 ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝
 "               
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""               
+set mouse=a
+
+" 改变光标行的颜色：可选black, brown, grey, blue, green, cyan, magenta, yellow, white
+"开启光亮光标行
+  set cursorline
+  hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+"开启高亮光标列
+  set cursorcolumn
+  hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 
 " Disable compatibility with vi which can cause unexpected issues.
 set nocompatible
-
-" 启用鼠标
-set mouse=a
 
 " Enable type file detection. Vim will be able to try to detect the type of file is use.
 filetype on
@@ -104,7 +110,7 @@ call plug#end()
 " MAPPINGS --------------------------------------------------------------- {{{
 
 " Set the backslash as the leader key.
-" let mapleader = "\"
+"let mapleader="\"
 
 " Press \\ to jump back to the last cursor position.
 nnoremap <leader>\ ``
