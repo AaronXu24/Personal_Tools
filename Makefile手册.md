@@ -172,3 +172,108 @@
 
 ### 静态模式规则
 
+- 静态模式规则是另一种在Makefile中减少编写的方法，以下为语法：
+		
+		targets...: target-pattern: prereq-patterns ...
+		   commands
+然后将词干代入`target-pattern`，以生成目标的依赖文件。
+
+通常将`.c`编译为`.o`文件比较笨的方法是这样的：
+	objects = foo.o bar.o all.o
+	all: $(objects)
+	
+	# These files compile via implicit rules
+	foo.o: foo.c
+	bar.o: bar.c
+	all.o: all.c
+	
+	all.c:
+		echo "int main() { return 0; }" > all.c
+	
+	%.c:
+		touch $@
+	
+	clean:
+		rm -f *.c *.o all
+
+我们利用静态模式规则，将其修改为更为高效的方式：
+	objects = foo.o bar.o all.o
+	all: $(objects)
+	
+	# These files compile via implicit rules
+	# Syntax - targets ...: target-pattern: prereq-patterns ...
+	# In the case of the first target, foo.o, the target-pattern matches foo.o and sets the "stem" to be "foo".
+	# It then replaces the '%' in prereq-patterns with that stem
+	$(objects): %.o: %.c
+	
+	all.c:
+		echo "int main() { return 0; }" > all.c
+	
+	%.c:
+		touch $@
+	
+	clean:
+		rm -f *.c *.o all
+
+### 静态模式规则和过滤
+
+`filter`函数可以用在静态模式中去匹配正确的文件。在以下的例子中，用于补齐`.raw`和`.result`的扩展：
+	obj_files = foo.result bar.o lose.o
+	src_files = foo.raw bar.c lose.c
+	
+	all: $(obj_files)
+	# Note: PHONY is important here. Without it, implicit rules will try to build the executable "all", since the prereqs are ".o" files.
+	.PHONY: all 
+	
+	# Ex 1: .o files depend on .c files. Though we don't actually make the .o file.
+	$(filter %.o,$(obj_files)): %.o: %.c
+		echo "target: $@ prereq: $<"
+	
+	# Ex 2: .result files depend on .raw files. Though we don't actually make the .result file.
+	$(filter %.result,$(obj_files)): %.result: %.raw
+		echo "target: $@ prereq: $<" 
+	
+	%.c %.raw:
+		touch $@
+	
+	clean:
+		rm -f $(src_files)
+另一个案例：
+
+	# Define a pattern rule that compiles every .c file into a .o file
+	%.o : %.c
+			$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+
+### 双冒号规则：允许一条目标拥有多个规则。
+
+	all: blah
+	
+	blah::
+		echo "hello"
+	
+	blah::
+		echo "hello again"
+
+## 命令和执行
+
+- **命令调用/沉默（Command Echoing/Silencing）**：在命令前增加一个`@` ，可以阻止其打印/调用。
+
+		all: 
+			@echo "This make line will not be printed"
+			echo "But this will"
+- **执行命令**：每条命令都是运行在一个新的shell中（至少效果上如此）：
+	
+		all: 
+			cd ..
+			# The cd above does not affect this line, because each command is effectively run in a new shell
+			echo `pwd`
+		
+			# This cd command affects the next because they are on the same line
+			cd ..;echo `pwd`
+		
+			# Same as above
+			cd ..; \
+			echo `pwd`
+## 变量P2
+
+### 风格和修改
