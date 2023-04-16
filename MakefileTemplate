@@ -1,0 +1,17 @@
+CXX=gcc
+TARGET=mini_webServer
+SRC=$(wildcard *.c)
+OBJ=$(patsubst %.c,%.o,$(SRC))
+
+CXXFLAGS=-c -Wall -g
+$(TARGET):$(OBJ)
+	$(CXX) -o $@ $^ -lpthread
+
+
+%.o: %.c
+	$(CXX) $(CXXFLAGS) $< -o $@
+
+.PHONY:clean
+clean:
+	rm -f *.o $(TARGET)
+
