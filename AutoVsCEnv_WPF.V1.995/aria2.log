@@ -1,0 +1,5 @@
+2023-05-03 15:44:01.677438 [NOTICE] [Context.cc:311] Downloading 1 item(s)
+2023-05-03 15:44:02.302474 [NOTICE] [HttpResponse.cc:169] CUID#7 - Redirecting to https://gitee.com/SDchao/AutoVsCEnv_WPF/attach_files/1367583/download/MinGW.7z
+2023-05-03 15:44:02.463483 [NOTICE] [HttpResponse.cc:169] CUID#7 - Redirecting to https://foruda.gitee.com/attach_file/1680751132999003766/mingw.7z?token=9da24d2a987959e1156a41486f87fe64&ts=1683099842&attname=MinGW.7z
+2023-05-03 15:44:03.487542 [NOTICE] [SingleFileAllocationIterator.cc:77] Allocating disk space. Use --file-allocation=none to disable it. See --file-allocation option in man page for more details.
+2023-05-03 15:46:16.986178 [NOTICE] [RequestGroup.cc:1216] Download complete: data/MinGW.7z
